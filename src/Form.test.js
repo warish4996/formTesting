@@ -1,6 +1,6 @@
 import React from 'react';
 import { fireEvent } from '@testing-library/react';
-import App from './App';
+import Form from './Form';
 import { configure,shallow } from 'enzyme'
 import Adapter from 'enzyme-adapter-react-16'
 
@@ -11,7 +11,7 @@ describe('Form',() =>{
   let wrapper;
 
   beforeEach(()=>{
-     wrapper = shallow(<App/>)
+     wrapper = shallow(<Form/>)
   })
 
   it('h1 tag',() =>{ 
@@ -47,6 +47,25 @@ describe('Form',() =>{
     expect(wrapper.find("h3").text()).toBe("Form Submit Done")
 
   })
+  it('when password is not enter',()=>{
+    const input1 =wrapper.find("[data-test='input1']");
+    const input2 =wrapper.find("[data-test='input2']")
+    input1.simulate('change',{target: {value:'war@gmail.com'}})
+    input2.simulate('change',{target: {value:''}})
+    const name = wrapper.find("[data-test='button']").simulate('click');
+    expect(wrapper.find("[data-test='p3']").text()).toBe("please fill the Password")
+
+  })
+  it('when email is not correct ',()=>{
+    const input1 =wrapper.find("[data-test='input1']");
+    const input2 =wrapper.find("[data-test='input2']")
+    input1.simulate('change',{target: {value:'wargmail.com'}})
+    input2.simulate('change',{target: {value:'war123'}})
+    const name = wrapper.find("[data-test='button']").simulate('click');
+    expect(wrapper.find("[data-test='p2']").text()).toBe("Your Email is wrong")
+
+  })
+
 
 
 })

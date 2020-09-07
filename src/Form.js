@@ -1,30 +1,18 @@
 import React,{useState} from 'react';
-import './App.css';
+import {isEmail} from './validation/validation'
+import './Form.css';
 
-export default ()=> {
+const Form =()=> {
 
 const [email, setEmail] = useState('');
 const [password, setPassword] = useState('');
-const [emailError, setEmailError] = useState(false);
-const [vaildEmailError, setValidEmailError] = useState(false);
-const [passwordError, setPasswordError] = useState(false);
+const [error, setError] = useState(false);
 const [success, setSuccess] = useState('');
 
-const isEmail =  (email) => {
-  let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  return re.test(String(email).toLowerCase());
-}
 
 const validateForm = () => {
-  if(!email) {
-    setEmailError(true);
-    return false;
-  }
-  else if(!isEmail(email)) {
-    setValidEmailError(true);
-    return false;
-  }else if(!password) {
-    setPasswordError(true);
+  if(!email || !isEmail(email) || !password ) {
+    setError(true);
     return false;
   }else{
     return true;
@@ -33,9 +21,7 @@ const validateForm = () => {
 
 
 const handleOnSubmit =(e)=>{
-  setEmailError(false);
-  setValidEmailError(false);
-  setPasswordError(false);
+  setError(false);
 
   if(validateForm()){
      setSuccess('Form Submit Done')
@@ -49,13 +35,15 @@ const handleOnSubmit =(e)=>{
      <h3><b>{success ? success :''}</b></h3>
      <lable><b>Email</b></lable>
      <input data-test="input1" value={email} onChange={(e)=>setEmail(e.target.value)} className='inputCss'/>
-     {emailError ? <p data-test="p1">please fill the Email</p>:''}
-     {vaildEmailError ? <p>Your Email is wrong</p>:''}
+     {error && !email ?  <p data-test="p1">please fill the Email</p>:''}
+     {error && !isEmail(email) ?  <p data-test="p2">Your Email is wrong</p>:''}
      <label><b>Password</b></label>
      <input data-test="input2" value={password} onChange={(e)=>setPassword(e.target.value)} className='inputCss'/>
-     {passwordError ? <p>please fill the Password</p>:''}
+     {error && !password ? <p data-test="p3">please fill the Password</p>:''}
      <button data-test="button" onClick={e =>handleOnSubmit(e)} className='buttonCss'>Submit</button>
     </div>
     </div>
   );
 }
+
+export default Form;
